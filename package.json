@@ -1,0 +1,17 @@
+{
+  "name": "sudoku",
+  "version": "1.0.0",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bini1988/sudoku.git"
+  },
+  "keywords": [
+    "sudoku"
+  ],
+  "author": "Nikolai Karastelev",
+  "license": "ISC",
+  "homepage": "https://github.com/bini1988/sudoku#readme"
+}
