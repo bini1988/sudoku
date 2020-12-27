@@ -3,9 +3,28 @@
  * Четырехсвязный список
  */
 export class FourLinkedList {
-  public constructor(
-    public host: ListHead
-  ) {}
+  public readonly host: ListHead;
+
+  public constructor(size: number) {
+    const host = new ListHead();
+    const cursor = new Array(size);
+
+    let curr = host;
+
+    for (let index = 0; index < size; index++) {
+      const node = new ListHead();
+
+      node.pL = curr;
+      node.pR = host;
+      curr.pR = node;
+      curr = node;
+      cursor[index] = node;
+    }
+    this.host = host;
+    this.cursor = cursor;
+  }
+
+  public cursor: (ListHead | ListNode)[];
 
   private removeLR(node: ListNode | ListHead) {
     node.pL.pR = node.pR;
@@ -105,20 +124,8 @@ export class FourLinkedList {
   public static from(src: number[][]): FourLinkedList {
     const ROWS_COUNT = src?.length || 0;
     const COLS_COUNT = src[0]?.length || 0;
-    const cols = new Array<ListHead | ListNode>(COLS_COUNT);
-    const host = new ListHead();
-
-    let prevNode = host;
-
-    for (let colIndex = 0; colIndex < COLS_COUNT; colIndex++) {
-      const node = new ListHead();
-
-      node.pL = prevNode;
-      node.pR = host;
-      prevNode.pR = node;
-      prevNode = node;
-      cols[colIndex] = node;
-    }
+    const list = new FourLinkedList(COLS_COUNT);
+    const cols = list.cursor;
 
     for (let rowIndex = 0; rowIndex < ROWS_COUNT; rowIndex++) {
       let pHead: ListNode | null = null;
@@ -150,7 +157,7 @@ export class FourLinkedList {
         pTail = node;
       }
     }
-    return new FourLinkedList(host);
+    return list;
   }
 }
 

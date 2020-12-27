@@ -78,26 +78,12 @@ export class SudokuSolver {
     const COLS_OFFSET = ROWS_OFFSET + ROWS_COUNT * NUMS_COUNT;
     const QUADS_OFFSET = COLS_OFFSET + COLS_COUNT * NUMS_COUNT;
 
-    const host = new ListHead();
-    const cols = new Array<ListHead | ListNode>(
+    const list = new List(
       ROWS_COUNT * COLS_COUNT +
       ROWS_COUNT * NUMS_COUNT +
       COLS_COUNT * NUMS_COUNT +
       QUADS_COUNT * NUMS_COUNT
     );
-
-    let prevNode = host;
-
-    for (let colIndex = 0; colIndex < cols.length; colIndex++) {
-      const node = new ListHead();
-
-      node.pL = prevNode;
-      node.pR = host;
-      prevNode.pR = node;
-      prevNode = node;
-      cols[colIndex] = node;
-    }
-
     const rows: ListNode[] = [];
 
     for (let rowIndex = 0; rowIndex < ROWS_COUNT; rowIndex++) {
@@ -110,7 +96,7 @@ export class SudokuSolver {
 
         for (let numIndex = 0; numIndex < NUMS_COUNT; numIndex++) {
           const index = rowOffset * ROWS_COUNT + colOffset + numIndex;
-          const row = new ListRow(cols, index);
+          const row = new ListRow(list.cursor, index);
 
           row.appendAt(rowOffset + colIndex);
           row.appendAt(rowOffset + numIndex + ROWS_OFFSET);
@@ -123,6 +109,6 @@ export class SudokuSolver {
         }
       }
     }
-    return new SudokuSolver(new List(host), rows);
+    return new SudokuSolver(list, rows);
   }
 }
