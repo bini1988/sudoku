@@ -110,51 +110,20 @@ export class FourLinkedList {
     this.restoreHead(node.head);
   }
 
-  public print() {
-    let col = this.host.pR;
-    const cols = [];
-
-    while (col !== this.host) {
-      cols.push(`[${col.count}]`)
-      col = col.pR;
-    }
-    console.log(cols.join("-"))
+  public appendRow(rowIndex: number): ListRow {
+    return new ListRow(this.cursor, rowIndex);
   }
 
   public static from(src: number[][]): FourLinkedList {
     const ROWS_COUNT = src?.length || 0;
     const COLS_COUNT = src[0]?.length || 0;
     const list = new FourLinkedList(COLS_COUNT);
-    const cols = list.cursor;
 
     for (let rowIndex = 0; rowIndex < ROWS_COUNT; rowIndex++) {
-      let pHead: ListNode | null = null;
-      let pTail: ListNode | null = null;
+      const row = list.appendRow(rowIndex);
 
       for (let colIndex = 0; colIndex < COLS_COUNT; colIndex++) {
-        if (src[rowIndex][colIndex] === 0) continue;
-
-        const nodeHead = cols[colIndex].pB as ListHead;
-        const node = new ListNode(nodeHead);
-
-        node.index = rowIndex;
-
-        node.pT = cols[colIndex];
-        cols[colIndex].pB = node;
-
-        nodeHead.count++;
-        nodeHead.pT = node;
-        node.pB = nodeHead;
-
-        pHead = pHead ? pHead : node;
-        pTail = pTail ? pTail : node;
-        node.pL = pTail;
-        node.pR = pHead;
-        pHead.pL = node;
-        pTail.pR = node;
-
-        cols[colIndex] = node;
-        pTail = node;
+        if (src[rowIndex][colIndex]) row.appendCol(colIndex);
       }
     }
     return list;
@@ -192,5 +161,43 @@ export class ListHead {
     this.pL = this;
     this.pR = this;
     this.index = -1;
+  }
+}
+
+export class ListRow {
+  public head: ListNode | null = null;
+  public tail: ListNode | null = null;
+
+  public constructor(
+    private cursor: (ListHead | ListNode)[],
+    private index: number,
+  ) {}
+
+  public appendCol(colIndex: number) {
+    const cursor = this.cursor;
+    const head = cursor[colIndex]?.pB;
+
+    if (!head || head instanceof ListNode) return;
+
+    const node = new ListNode(head);
+
+    node.index = this.index;
+
+    node.pT = cursor[colIndex];
+    cursor[colIndex].pB = node;
+
+    head.count++;
+    head.pT = node;
+    node.pB = head;
+
+    this.head = this.head || node;
+    this.tail = this.tail || node;
+    node.pL = this.tail;
+    node.pR = this.head;
+    this.head.pL = node;
+    this.tail.pR = node;
+
+    cursor[colIndex] = node;
+    this.tail = node;
   }
 }

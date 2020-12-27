@@ -1,38 +1,5 @@
-import { FourLinkedList as List, ListHead, ListNode } from "./four-linked-list";
+import { FourLinkedList as List, ListNode } from "./four-linked-list";
 import { solve } from './x-algorithm';
-
-class ListRow {
-  public pHead: ListNode | null = null;
-  public pTail: ListNode | null = null;
-  public constructor(
-    private cols: (ListHead | ListNode)[],
-    private index: number,
-  ) {}
-  public appendAt(colIndex: number) {
-    const cols = this.cols;
-    const nodeHead = cols[colIndex].pB as ListHead;
-    const node = new ListNode(nodeHead);
-
-    node.index = this.index;
-
-    node.pT = cols[colIndex];
-    cols[colIndex].pB = node;
-
-    nodeHead.count++;
-    nodeHead.pT = node;
-    node.pB = nodeHead;
-
-    this.pHead = this.pHead ? this.pHead : node;
-    this.pTail = this.pTail ? this.pTail : node;
-    node.pL = this.pTail;
-    node.pR = this.pHead;
-    this.pHead.pL = node;
-    this.pTail.pR = node;
-
-    cols[colIndex] = node;
-    this.pTail = node;
-  }
-}
 
 export class SudokuSolver {
   public constructor(
@@ -90,21 +57,20 @@ export class SudokuSolver {
       const rowOffset = rowIndex * COLS_COUNT;
 
       for (let colIndex = 0; colIndex < COLS_COUNT; colIndex++) {
-        const numValue = src[rowIndex][colIndex];
         const colOffset = colIndex * COLS_COUNT;
+        const numValue = src[rowIndex][colIndex];
         const quadOffset =  SudokuSolver.quad(rowIndex, colIndex) * COLS_COUNT;
 
         for (let numIndex = 0; numIndex < NUMS_COUNT; numIndex++) {
-          const index = rowOffset * ROWS_COUNT + colOffset + numIndex;
-          const row = new ListRow(list.cursor, index);
+          const row = list.appendRow(rowOffset * ROWS_COUNT + colOffset + numIndex)
 
-          row.appendAt(rowOffset + colIndex);
-          row.appendAt(rowOffset + numIndex + ROWS_OFFSET);
-          row.appendAt(colOffset + numIndex + COLS_OFFSET);
-          row.appendAt(quadOffset + numIndex + QUADS_OFFSET);
+          row.appendCol(rowOffset + colIndex);
+          row.appendCol(rowOffset + numIndex + ROWS_OFFSET);
+          row.appendCol(colOffset + numIndex + COLS_OFFSET);
+          row.appendCol(quadOffset + numIndex + QUADS_OFFSET);
 
-          if (numValue === numIndex + 1 && row.pHead) {
-            rows.push(row.pHead);
+          if (numValue === numIndex + 1 && row.head) {
+            rows.push(row.head);
           }
         }
       }
