@@ -1,80 +1,81 @@
 import { FourLinkedList as List, ListNode } from "./four-linked-list";
-import { solve } from './x-algorithm';
+import * as XAlgorithm from './x-algorithm';
 
-export class SudokuSolver {
-  public constructor(
-    private list: List,
-    private solution: ListNode[]
-  ) {}
+export interface SudokuCell {
+  numValue: number;
+  rowIndex: number;
+  colIndex: number;
+}
 
-  public solve(): number[] {
-    const out: number[] = [];
+export function quad(rowIndex: number, colIndex: number, size: number): number {
+  const quads =  Math.sqrt(size);
 
-    for (const row of this.solution) {
-      this.list.remove(row);
-      out.push(row.index);
-    }
-    return out.concat(solve(this.list));
-  }
+  return ~~(rowIndex / quads) * quads + ~~(colIndex / quads);
+}
 
-  public static quad(rowIndex: number, colIndex: number): number {
-    switch (rowIndex) {
-      case 0:
-      case 1: switch (colIndex) {
-        case 0: return 0;
-        case 1: return 0;
-        default: return 1;
-      }
-      case 2:
-      case 3: switch (colIndex) {
-        case 0: return 2;
-        case 1: return 2;
-        default: return 3;
-      }
-      default: return 0;
+export function zeros(size: number): number[][] {
+  const out: number[][] = [];
+
+  for (let rowIndex = 0; rowIndex < size; rowIndex++) {
+    out[rowIndex] = out[rowIndex] || [];
+
+    for (let colIndex = 0; colIndex < size; colIndex++) {
+      out[rowIndex][colIndex] = 0;
     }
   }
+  return out;
+}
 
-  public static from(src: number[][]): SudokuSolver {
-    const ROWS_COUNT = 4;
-    const COLS_COUNT = 4;
-    const NUMS_COUNT = 4;
-    const QUADS_COUNT = 4;
+export function pushCell(arr: number[][], cell?: SudokuCell) {
+  if (cell) arr[cell.rowIndex][cell.colIndex] = cell.numValue;
+}
 
-    const ROWS_OFFSET = ROWS_COUNT * COLS_COUNT;
-    const COLS_OFFSET = ROWS_OFFSET + ROWS_COUNT * NUMS_COUNT;
-    const QUADS_OFFSET = COLS_OFFSET + COLS_COUNT * NUMS_COUNT;
+export function solve(src: number[][]) {
+  const RANK = src?.length || 0;
+  const ROWS_COUNT = RANK;
+  const COLS_COUNT = RANK;
+  const NUMS_COUNT = RANK;
 
-    const list = new List(
-      ROWS_COUNT * COLS_COUNT +
-      ROWS_COUNT * NUMS_COUNT +
-      COLS_COUNT * NUMS_COUNT +
-      QUADS_COUNT * NUMS_COUNT
-    );
-    const rows: ListNode[] = [];
+  const PAGE_1 = RANK * RANK;
+  const PAGE_2 = PAGE_1 * 2;
+  const PAGE_3 = PAGE_1 * 3;
 
-    for (let rowIndex = 0; rowIndex < ROWS_COUNT; rowIndex++) {
-      const rowOffset = rowIndex * COLS_COUNT;
+  const list = new List<SudokuCell>(RANK * RANK * 4);
+  const outRows: ListNode<SudokuCell>[] = [];
+  const out = zeros(RANK);
 
-      for (let colIndex = 0; colIndex < COLS_COUNT; colIndex++) {
-        const colOffset = colIndex * COLS_COUNT;
-        const numValue = src[rowIndex][colIndex];
-        const quadOffset =  SudokuSolver.quad(rowIndex, colIndex) * COLS_COUNT;
+  for (let rowIndex = 0; rowIndex < ROWS_COUNT; rowIndex++) {
+    const rowsOffset = rowIndex * ROWS_COUNT;
 
-        for (let numIndex = 0; numIndex < NUMS_COUNT; numIndex++) {
-          const row = list.appendRow(rowOffset * ROWS_COUNT + colOffset + numIndex)
+    for (let colIndex = 0; colIndex < COLS_COUNT; colIndex++) {
+      const colsOffset = colIndex * COLS_COUNT;
+      const rowIndexOffset = rowsOffset * ROWS_COUNT + colsOffset;
+      const numValue = src[rowIndex][colIndex] - 1;
+      const quadOffset = quad(rowIndex, colIndex, RANK) * RANK;
 
-          row.appendCol(rowOffset + colIndex);
-          row.appendCol(rowOffset + numIndex + ROWS_OFFSET);
-          row.appendCol(colOffset + numIndex + COLS_OFFSET);
-          row.appendCol(quadOffset + numIndex + QUADS_OFFSET);
+      for (let numIndex = 0; numIndex < NUMS_COUNT; numIndex++) {
+        const cell = { numValue: numIndex + 1, rowIndex, colIndex };
+        const row = list
+          .pushRow(rowIndexOffset + numIndex, cell)
+          .pushCol(rowsOffset + colIndex)            // cells
+          .pushCol(rowsOffset + numIndex + PAGE_1)   // rows
+          .pushCol(colsOffset + numIndex + PAGE_2)   // cols
+          .pushCol(quadOffset + numIndex + PAGE_3);  // quads
 
-          if (numValue === numIndex + 1 && row.head) {
-            rows.push(row.head);
-          }
+        if (row.ref && numIndex === numValue) {
+          outRows.push(row.ref);
         }
       }
     }
-    return new SudokuSolver(list, rows);
   }
+
+  for (const row of outRows) {
+    list.remove(row);
+  }
+  outRows.push(...XAlgorithm.solve(list));
+
+  for (const row of outRows) {
+    pushCell(out, row.data);
+  }
+  return out;
 }

@@ -2,17 +2,17 @@
 /**
  * Четырехсвязный список
  */
-export class FourLinkedList {
-  public readonly host: ListHead;
+export class FourLinkedList<T = unknown> {
+  public readonly host: ListHead<T>;
 
   public constructor(size: number) {
-    const host = new ListHead();
-    const cursor = new Array(size);
+    const host = new ListHead<T>();
+    const cursor = new Array<ListElement<T>>(size);
 
     let curr = host;
 
     for (let index = 0; index < size; index++) {
-      const node = new ListHead();
+      const node = new ListHead<T>();
 
       node.pL = curr;
       node.pR = host;
@@ -24,37 +24,37 @@ export class FourLinkedList {
     this.cursor = cursor;
   }
 
-  public cursor: (ListHead | ListNode)[];
+  private readonly cursor: ListElement<T>[];
 
-  private removeLR(node: ListNode | ListHead) {
+  private removeLR(node: ListElement<T>) {
     node.pL.pR = node.pR;
     node.pR.pL = node.pL;
   }
 
-  private restoreLR(node: ListNode | ListHead) {
+  private restoreLR(node: ListElement<T>) {
     node.pL.pR = node;
     node.pR.pL = node;
   }
 
-  private removeTB(node: ListNode | ListHead) {
+  private removeTB(node: ListElement<T>) {
     node.pT.pB = node.pB;
     node.pB.pT = node.pT;
 
     if (node instanceof ListNode) {
-      node.head.count--;
+      node.pH.amount--;
     }
   }
 
-  private restoreTB(node: ListNode | ListHead) {
+  private restoreTB(node: ListElement<T>) {
     node.pT.pB = node;
     node.pB.pT = node;
 
     if (node instanceof ListNode) {
-      node.head.count++;
+      node.pH.amount++;
     }
   }
 
-  private removeHead(head: ListHead) {
+  private removeHead(head: ListHead<T>) {
     this.removeLR(head);
 
     let row = head.pB;
@@ -71,7 +71,7 @@ export class FourLinkedList {
     }
   }
 
-  private restoreHead(head: ListHead) {
+  private restoreHead(head: ListHead<T>) {
     this.restoreLR(head);
 
     let row = head.pB;
@@ -88,116 +88,159 @@ export class FourLinkedList {
     }
   }
 
-  public remove(node: ListNode | ListHead) {
+  public remove(node: ListElement<T>) {
     if (node instanceof ListHead) {
       return this.removeHead(node);
     }
-    this.removeHead(node.head);
+    this.removeHead(node.pH);
 
     for(let cur = node.pR; cur !== node; cur = cur.pR) {
-      this.removeHead(cur.head);
+      this.removeHead(cur.pH);
     }
   }
 
-  public restore(node: ListNode | ListHead) {
+  public restore(node: ListElement<T>) {
     if (node instanceof ListHead) {
       return this.restoreHead(node);
     }
 
     for(let cur = node.pL; cur !== node; cur = cur.pL) {
-      this.restoreHead(cur.head);
+      this.restoreHead(cur.pH);
     }
-    this.restoreHead(node.head);
+    this.restoreHead(node.pH);
   }
 
-  public appendRow(rowIndex: number): ListRow {
-    return new ListRow(this.cursor, rowIndex);
+  public pushRow(rowIndex: number, data?: T) {
+    return new ListRow(rowIndex, this.cursor, data);
   }
 
-  public static from(src: number[][]): FourLinkedList {
+  public static from<T>(src: number[][]): FourLinkedList<T> {
     const ROWS_COUNT = src?.length || 0;
     const COLS_COUNT = src[0]?.length || 0;
-    const list = new FourLinkedList(COLS_COUNT);
+    const list = new FourLinkedList<T>(COLS_COUNT);
 
     for (let rowIndex = 0; rowIndex < ROWS_COUNT; rowIndex++) {
-      const row = list.appendRow(rowIndex);
+      const row = list.pushRow(rowIndex);
 
       for (let colIndex = 0; colIndex < COLS_COUNT; colIndex++) {
-        if (src[rowIndex][colIndex]) row.appendCol(colIndex);
+        if (src[rowIndex][colIndex]) row.pushCol(colIndex);
       }
     }
     return list;
   }
 }
 
-export class ListNode {
-  public head: ListHead;
-  public pT: ListNode | ListHead;
-  public pB: ListNode | ListHead;
-  public pL: ListNode;
-  public pR: ListNode;
-  public index: number;
-  public constructor (head: ListHead) {
-    this.head = head;
-    this.pT = this;
-    this.pB = this;
-    this.pL = this;
-    this.pR = this;
-    this.index = -1;
-  }
-}
+export type ListElement<T> = ListHead<T> | ListNode<T>;
 
-export class ListHead {
-  public count: number;
-  public pT: ListHead | ListNode;
-  public pB: ListHead | ListNode;
-  public pL: ListHead;
-  public pR: ListHead;
-  public index: number;
+/**
+ * Позиция элемента в списке
+ */
+export class Position {
+  /** Индекс строки */
+  public row: number;
+  /** Индекс колонки */
+  public col: number;
+
   public constructor() {
-    this.count = 0;
+    this.row = -1;
+    this.col = -1;
+  }
+}
+
+/**
+ * Элемент списка
+ */
+export class ListNode<T = unknown> {
+  /** Указатель на заголовок */
+  public pH: ListHead<T>;
+  /** Указатель на верхнего соседа */
+  public pT: ListElement<T>;
+  /** Указатель на нижнего соседа */
+  public pB: ListElement<T>;
+  /** Указатель на левого соседа */
+  public pL: ListNode<T>;
+  /** Указатель на правого соседа */
+  public pR: ListNode<T>;
+  /** Позиция элемента */
+  public pos: Position;
+  /** Связанные данные */
+  public data?: T;
+
+  public constructor (head: ListHead<T>) {
+    this.pH = head;
     this.pT = this;
     this.pB = this;
     this.pL = this;
     this.pR = this;
-    this.index = -1;
+    this.pos = new Position();
   }
 }
 
-export class ListRow {
-  public head: ListNode | null = null;
-  public tail: ListNode | null = null;
+/**
+ * Элемент заголовка списка
+ */
+export class ListHead<T = unknown> {
+  /** Указатель на верхнего соседа */
+  public pT: ListElement<T>;
+  /** Указатель на нижнего соседа */
+  public pB: ListElement<T>;
+  /** Указатель на левого соседа */
+  public pL: ListHead<T>;
+  /** Указатель на правого соседа */
+  public pR: ListHead<T>;
+  /** Число строк */
+  public amount: number;
+
+  public constructor() {
+    this.pT = this;
+    this.pB = this;
+    this.pL = this;
+    this.pR = this;
+    this.amount = 0;
+  }
+}
+
+/**
+ * Список элементов строки списка
+ */
+export class ListRow<T = unknown> {
+  public ref: ListNode<T> | null = null;
 
   public constructor(
-    private cursor: (ListHead | ListNode)[],
-    private index: number,
+    private readonly index: number,
+    private readonly cursor: ListElement<T>[],
+    private readonly data?: T,
   ) {}
 
-  public appendCol(colIndex: number) {
+  public pushCol(colIndex: number): ListRow<T> {
     const cursor = this.cursor;
-    const head = cursor[colIndex]?.pB;
+    const rowIndex = this.index;;
+    const colHead = cursor[colIndex]?.pB;
 
-    if (!head || head instanceof ListNode) return;
+    if (!colHead || colHead instanceof ListNode) {
+      return this;
+    }
+    const node = new ListNode<T>(colHead);
 
-    const node = new ListNode(head);
-
-    node.index = this.index;
+    node.pos.row = rowIndex;
+    node.pos.col = colIndex;
+    node.data = this.data;
 
     node.pT = cursor[colIndex];
     cursor[colIndex].pB = node;
 
-    head.count++;
-    head.pT = node;
-    node.pB = head;
+    colHead.amount++;
+    colHead.pT = node;
+    node.pB = colHead;
 
-    this.head = this.head || node;
-    this.tail = this.tail || node;
-    node.pL = this.tail;
-    node.pR = this.head;
-    this.head.pL = node;
-    this.tail.pR = node;
+    this.ref = this.ref || node;
+    node.pL = this.ref.pL;
+    node.pR = this.ref;
+    this.ref.pL.pR = node;
+    this.ref.pL = node;
 
     cursor[colIndex] = node;
-    this.tail = node;
-  }
+
+    return this;
+  };
 }

@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import { solve } from './x-algorithm';
 
 describe('Algorithm X', () => {
-  it('Problem #1', () => {
+  it('Решение задачи полного покрытия #1', () => {
     const problem = [
       [1, 0, 0, 1, 0, 0, 1],
       [1, 0, 0, 1, 0, 0, 0], // *
@@ -11,10 +11,11 @@ describe('Algorithm X', () => {
       [0, 1, 1, 0, 0, 1, 1],
       [0, 1, 0, 0, 0, 0, 1], // *
     ];
+    const solution = solve(problem);
 
-    expect(solve(problem)).to.have.all.members([1, 3, 5]);
+    expect(solution.map(it => it.pos.row)).to.have.all.members([1, 3, 5]);
   });
-  it('Problem #2', () => {
+  it('Решение задачи полного покрытия #2', () => {
     const problem = [
       [0, 0, 1, 0, 1, 1, 0],
       [1, 0, 0, 1, 0, 0, 1],
@@ -23,10 +24,11 @@ describe('Algorithm X', () => {
       [0, 1, 0, 0, 0, 0, 1],
       [0, 0, 0, 1, 1, 0, 1]
     ];
+    const solution = solve(problem);
 
-    expect(solve(problem)).to.have.all.members([0, 3, 4]);
+    expect(solution.map(it => it.pos.row)).to.have.all.members([0, 3, 4]);
   });
-  it('Problem #3', () => {
+  it('Решение задачи полного покрытия #3', () => {
     const problem = [
     // C  D  G  H  I  J  K  L  M  N  O  P
       [1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -52,7 +54,8 @@ describe('Algorithm X', () => {
       [0, 0, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0], // 20
     // C  D  G  H  I  J  K  L  M  N  O  P
     ];
+    const solution = solve(problem);
 
-    expect(solve(problem)).to.have.all.members([5, 12, 19, 20]);
+    expect(solution.map(it => it.pos.row)).to.have.all.members([5, 12, 19, 20]);
   });
 });
