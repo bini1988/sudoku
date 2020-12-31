@@ -1,13 +1,10 @@
 {
-    "defaultSeverity": "error",
-    "extends": [
-        "tslint:recommended"
-    ],
-    "jsRules": {},
-    "rules": {
-      "no-console": false,
-      "max-classes-per-file": false,
-      "no-bitwise": false
-    },
-    "rulesDirectory": []
+  "defaultSeverity": "error",
+  "extends": ["tslint:recommended"],
+  "rules": {
+    "no-console": false,
+    "max-classes-per-file": false,
+    "no-bitwise": false
+  },
+  "rulesDirectory": []
 }
