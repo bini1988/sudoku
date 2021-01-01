@@ -5,10 +5,281 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>Sudoku</title>
-    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
   </head>
-  <body>
-    <h1>Sudoku!</h1>
+  <body class="page">
+    <div class="page__wrap">
+      <div class="page__controls controls">
+        <h1 class="controls__title">Sudoku Solver</h1>
+        <button id="clear" class="controls__btn btn btn--type-clear" type="button" title="Clear">Clear</button>
+        <button id="solve" class="controls__btn btn btn--type-solve" type="button" title="Solve">Solve</button>
+      </div>
+      <div id="sudoku" class="page__sudoku sudoku">
+        <table class="sudoku__table">
+          <tr class="sudoku__row">
+            <td class="sudoku__cell">
+              <input class="sudoku__value" type="text" autocomplete="off" maxlength="1" data-row="0" data-col="0">
+            </td>
+            <td class="sudoku__cell">
+              <input class="sudoku__value" type="text" autocomplete="off" maxlength="1" data-row="0" data-col="1">
+            </td>
+            <td class="sudoku__cell">
+              <input class="sudoku__value" type="text" autocomplete="off" maxlength="1" data-row="0" data-col="2">
+            </td>
+            <td class="sudoku__cell">
+              <input class="sudoku__value" type="text" autocomplete="off" maxlength="1" data-row="0" data-col="3">
+            </td>
+            <td class="sudoku__cell">
+              <input class="sudoku__value" type="text" autocomplete="off" maxlength="1" data-row="0" data-col="4">
+            </td>
+            <td class="sudoku__cell">
+              <input class="sudoku__value" type="text" autocomplete="off" maxlength="1" data-row="0" data-col="5">
+            </td>
+            <td class="sudoku__cell">
+              <input class="sudoku__value" type="text" autocomplete="off" maxlength="1" data-row="0" data-col="6">
+            </td>
+            <td class="sudoku__cell">
+              <input class="sudoku__value" type="text" autocomplete="off" maxlength="1" data-row="0" data-col="7">
+            </td>
+            <td class="sudoku__cell">
+              <input class="sudoku__value" type="text" autocomplete="off" maxlength="1" data-row="0" data-col="8">
+            </td>
+          </tr>
+          <tr class="sudoku__row">
+            <td class="sudoku__cell">
+              <input class="sudoku__value" type="text" autocomplete="off" maxlength="1" data-row="1" data-col="0">
+            </td>
+            <td class="sudoku__cell">
+              <input class="sudoku__value" type="text" autocomplete="off" maxlength="1" data-row="1" data-col="1">
+            </td>
+            <td class="sudoku__cell">
+              <input class="sudoku__value" type="text" autocomplete="off" maxlength="1" data-row="1" data-col="2">
+            </td>
+            <td class="sudoku__cell">
+              <input class="sudoku__value" type="text" autocomplete="off" maxlength="1" data-row="1" data-col="3">
+            </td>
+            <td class="sudoku__cell">
+              <input class="sudoku__value" type="text" autocomplete="off" maxlength="1" data-row="1" data-col="4">
+            </td>
+            <td class="sudoku__cell">
+              <input class="sudoku__value" type="text" autocomplete="off" maxlength="1" data-row="1" data-col="5">
+            </td>
+            <td class="sudoku__cell">
+              <input class="sudoku__value" type="text" autocomplete="off" maxlength="1" data-row="1" data-col="6">
+            </td>
+            <td class="sudoku__cell">
+              <input class="sudoku__value" type="text" autocomplete="off" maxlength="1" data-row="1" data-col="7">
+            </td>
+            <td class="sudoku__cell">
+              <input class="sudoku__value" type="text" autocomplete="off" maxlength="1" data-row="1" data-col="8">
+            </td>
+          </tr>
+          <tr class="sudoku__row">
+            <td class="sudoku__cell">
+              <input class="sudoku__value" type="text" autocomplete="off" maxlength="1" data-row="2" data-col="0">
+            </td>
+            <td class="sudoku__cell">
+              <input class="sudoku__value" type="text" autocomplete="off" maxlength="1" data-row="2" data-col="1">
+            </td>
+            <td class="sudoku__cell">
+              <input class="sudoku__value" type="text" autocomplete="off" maxlength="1" data-row="2" data-col="2">
+            </td>
+            <td class="sudoku__cell">
+              <input class="sudoku__value" type="text" autocomplete="off" maxlength="1" data-row="2" data-col="3">
+            </td>
+            <td class="sudoku__cell">
+              <input class="sudoku__value" type="text" autocomplete="off" maxlength="1" data-row="2" data-col="4">
+            </td>
+            <td class="sudoku__cell">
+              <input class="sudoku__value" type="text" autocomplete="off" maxlength="1" data-row="2" data-col="5">
+            </td>
+            <td class="sudoku__cell">
+              <input class="sudoku__value" type="text" autocomplete="off" maxlength="1" data-row="2" data-col="6">
+            </td>
+            <td class="sudoku__cell">
+              <input class="sudoku__value" type="text" autocomplete="off" maxlength="1" data-row="2" data-col="7">
+            </td>
+            <td class="sudoku__cell">
+              <input class="sudoku__value" type="text" autocomplete="off" maxlength="1" data-row="2" data-col="8">
+            </td>
+          </tr>
+          <tr class="sudoku__row">
+            <td class="sudoku__cell">
+              <input class="sudoku__value" type="text" autocomplete="off" maxlength="1" data-row="3" data-col="0">
+            </td>
+            <td class="sudoku__cell">
+              <input class="sudoku__value" type="text" autocomplete="off" maxlength="1" data-row="3" data-col="1">
+            </td>
+            <td class="sudoku__cell">
+              <input class="sudoku__value" type="text" autocomplete="off" maxlength="1" data-row="3" data-col="2">
+            </td>
+            <td class="sudoku__cell">
+              <input class="sudoku__value" type="text" autocomplete="off" maxlength="1" data-row="3" data-col="3">
+            </td>
+            <td class="sudoku__cell">
+              <input class="sudoku__value" type="text" autocomplete="off" maxlength="1" data-row="3" data-col="4">
+            </td>
+            <td class="sudoku__cell">
+              <input class="sudoku__value" type="text" autocomplete="off" maxlength="1" data-row="3" data-col="5">
+            </td>
+            <td class="sudoku__cell">
+              <input class="sudoku__value" type="text" autocomplete="off" maxlength="1" data-row="3" data-col="6">
+            </td>
+            <td class="sudoku__cell">
+              <input class="sudoku__value" type="text" autocomplete="off" maxlength="1" data-row="3" data-col="7">
+            </td>
+            <td class="sudoku__cell">
+              <input class="sudoku__value" type="text" autocomplete="off" maxlength="1" data-row="3" data-col="8">
+            </td>
+          </tr>
+          <tr class="sudoku__row">
+            <td class="sudoku__cell">
+              <input class="sudoku__value" type="text" autocomplete="off" maxlength="1" data-row="4" data-col="0">
+            </td>
+            <td class="sudoku__cell">
+              <input class="sudoku__value" type="text" autocomplete="off" maxlength="1" data-row="4" data-col="1">
+            </td>
+            <td class="sudoku__cell">
+              <input class="sudoku__value" type="text" autocomplete="off" maxlength="1" data-row="4" data-col="2">
+            </td>
+            <td class="sudoku__cell">
+              <input class="sudoku__value" type="text" autocomplete="off" maxlength="1" data-row="4" data-col="3">
+            </td>
+            <td class="sudoku__cell">
+              <input class="sudoku__value" type="text" autocomplete="off" maxlength="1" data-row="4" data-col="4">
+            </td>
+            <td class="sudoku__cell">
+              <input class="sudoku__value" type="text" autocomplete="off" maxlength="1" data-row="4" data-col="5">
+            </td>
+            <td class="sudoku__cell">
+              <input class="sudoku__value" type="text" autocomplete="off" maxlength="1" data-row="4" data-col="6">
+            </td>
+            <td class="sudoku__cell">
+              <input class="sudoku__value" type="text" autocomplete="off" maxlength="1" data-row="4" data-col="7">
+            </td>
+            <td class="sudoku__cell">
+              <input class="sudoku__value" type="text" autocomplete="off" maxlength="1" data-row="4" data-col="8">
+            </td>
+          </tr>
+          <tr class="sudoku__row">
+            <td class="sudoku__cell">
+              <input class="sudoku__value" type="text" autocomplete="off" maxlength="1" data-row="5" data-col="0">
+            </td>
+            <td class="sudoku__cell">
+              <input class="sudoku__value" type="text" autocomplete="off" maxlength="1" data-row="5" data-col="1">
+            </td>
+            <td class="sudoku__cell">
+              <input class="sudoku__value" type="text" autocomplete="off" maxlength="1" data-row="5" data-col="2">
+            </td>
+            <td class="sudoku__cell">
+              <input class="sudoku__value" type="text" autocomplete="off" maxlength="1" data-row="5" data-col="3">
+            </td>
+            <td class="sudoku__cell">
+              <input class="sudoku__value" type="text" autocomplete="off" maxlength="1" data-row="5" data-col="4">
+            </td>
+            <td class="sudoku__cell">
+              <input class="sudoku__value" type="text" autocomplete="off" maxlength="1" data-row="5" data-col="5">
+            </td>
+            <td class="sudoku__cell">
+              <input class="sudoku__value" type="text" autocomplete="off" maxlength="1" data-row="5" data-col="6">
+            </td>
+            <td class="sudoku__cell">
+              <input class="sudoku__value" type="text" autocomplete="off" maxlength="1" data-row="5" data-col="7">
+            </td>
+            <td class="sudoku__cell">
+              <input class="sudoku__value" type="text" autocomplete="off" maxlength="1" data-row="5" data-col="8">
+            </td>
+          </tr>
+          <tr class="sudoku__row">
+            <td class="sudoku__cell">
+              <input class="sudoku__value" type="text" autocomplete="off" maxlength="1" data-row="6" data-col="0">
+            </td>
+            <td class="sudoku__cell">
+              <input class="sudoku__value" type="text" autocomplete="off" maxlength="1" data-row="6" data-col="1">
+            </td>
+            <td class="sudoku__cell">
+              <input class="sudoku__value" type="text" autocomplete="off" maxlength="1" data-row="6" data-col="2">
+            </td>
+            <td class="sudoku__cell">
+              <input class="sudoku__value" type="text" autocomplete="off" maxlength="1" data-row="6" data-col="3">
+            </td>
+            <td class="sudoku__cell">
+              <input class="sudoku__value" type="text" autocomplete="off" maxlength="1" data-row="6" data-col="4">
+            </td>
+            <td class="sudoku__cell">
+              <input class="sudoku__value" type="text" autocomplete="off" maxlength="1" data-row="6" data-col="5">
+            </td>
+            <td class="sudoku__cell">
+              <input class="sudoku__value" type="text" autocomplete="off" maxlength="1" data-row="6" data-col="6">
+            </td>
+            <td class="sudoku__cell">
+              <input class="sudoku__value" type="text" autocomplete="off" maxlength="1" data-row="6" data-col="7">
+            </td>
+            <td class="sudoku__cell">
+              <input class="sudoku__value" type="text" autocomplete="off" maxlength="1" data-row="6" data-col="8">
+            </td>
+          </tr>
+          <tr class="sudoku__row">
+            <td class="sudoku__cell">
+              <input class="sudoku__value" type="text" autocomplete="off" maxlength="1" data-row="7" data-col="0">
+            </td>
+            <td class="sudoku__cell">
+              <input class="sudoku__value" type="text" autocomplete="off" maxlength="1" data-row="7" data-col="1">
+            </td>
+            <td class="sudoku__cell">
+              <input class="sudoku__value" type="text" autocomplete="off" maxlength="1" data-row="7" data-col="2">
+            </td>
+            <td class="sudoku__cell">
+              <input class="sudoku__value" type="text" autocomplete="off" maxlength="1" data-row="7" data-col="3">
+            </td>
+            <td class="sudoku__cell">
+              <input class="sudoku__value" type="text" autocomplete="off" maxlength="1" data-row="7" data-col="4">
+            </td>
+            <td class="sudoku__cell">
+              <input class="sudoku__value" type="text" autocomplete="off" maxlength="1" data-row="7" data-col="5">
+            </td>
+            <td class="sudoku__cell">
+              <input class="sudoku__value" type="text" autocomplete="off" maxlength="1" data-row="7" data-col="6">
+            </td>
+            <td class="sudoku__cell">
+              <input class="sudoku__value" type="text" autocomplete="off" maxlength="1" data-row="7" data-col="7">
+            </td>
+            <td class="sudoku__cell">
+              <input class="sudoku__value" type="text" autocomplete="off" maxlength="1" data-row="7" data-col="8">
+            </td>
+          </tr>
+          <tr class="sudoku__row">
+            <td class="sudoku__cell">
+              <input class="sudoku__value" type="text" autocomplete="off" maxlength="1" data-row="8" data-col="0">
+            </td>
+            <td class="sudoku__cell">
+              <input class="sudoku__value" type="text" autocomplete="off" maxlength="1" data-row="8" data-col="1">
+            </td>
+            <td class="sudoku__cell">
+              <input class="sudoku__value" type="text" autocomplete="off" maxlength="1" data-row="8" data-col="2">
+            </td>
+            <td class="sudoku__cell">
+              <input class="sudoku__value" type="text" autocomplete="off" maxlength="1" data-row="8" data-col="3">
+            </td>
+            <td class="sudoku__cell">
+              <input class="sudoku__value" type="text" autocomplete="off" maxlength="1" data-row="8" data-col="4">
+            </td>
+            <td class="sudoku__cell">
+              <input class="sudoku__value" type="text" autocomplete="off" maxlength="1" data-row="8" data-col="5">
+            </td>
+            <td class="sudoku__cell">
+              <input class="sudoku__value" type="text" autocomplete="off" maxlength="1" data-row="8" data-col="6">
+            </td>
+            <td class="sudoku__cell">
+              <input class="sudoku__value" type="text" autocomplete="off" maxlength="1" data-row="8" data-col="7">
+            </td>
+            <td class="sudoku__cell">
+              <input class="sudoku__value" type="text" autocomplete="off" maxlength="1" data-row="8" data-col="8">
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
   </body>
 </html>

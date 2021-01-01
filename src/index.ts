@@ -1,17 +1,42 @@
 import './style.css';
 import { solve } from './lib/sudoku-solver';
 
-const problem = [
-  [0, 9, 5, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 7],
-  [3, 4, 0, 5, 0, 0, 8, 0, 0],
-  [4, 0, 0, 3, 0, 0, 0, 0, 5],
-  [5, 0, 0, 0, 0, 0, 0, 8, 0],
-  [7, 0, 1, 0, 0, 2, 0, 0, 0],
-  [0, 0, 0, 8, 0, 4, 7, 0, 2],
-  [0, 6, 0, 0, 9, 0, 5, 0, 8],
-  [0, 0, 0, 0, 6, 0, 4, 0, 0],
-];
+window.addEventListener('DOMContentLoaded', (event) => {
+  const sudoku = document.getElementById('sudoku');
+  const sudokuInputs = sudoku?.querySelectorAll<HTMLInputElement>('[data-row][data-col]');
+  const sudokuInputsList = sudokuInputs ? Array.from(sudokuInputs) : [];
 
-console.log('Sudoku Solver!');
-console.table(solve(problem));
+  const clearButton = document.getElementById('clear');
+  const solveButton = document.getElementById('solve');
+
+  clearButton?.addEventListener('click', () => {
+    for (const input of sudokuInputsList) {
+      input.value = "";
+      input.classList.remove('sudoku__value--style-light');
+    }
+  })
+  solveButton?.addEventListener('click', () => {
+    const problem: number[][] = [];
+
+    for (const input of sudokuInputsList) {
+      const rowIndex = +(input.dataset.row || 0);
+      const colIndex = +(input.dataset.col || 0);
+
+      problem[rowIndex] = problem[rowIndex] || [];
+      problem[rowIndex][colIndex] = +input.value;
+    }
+
+    const solution = solve(problem);
+
+    for (const input of sudokuInputsList) {
+      const rowIndex = +(input.dataset.row || 0);
+      const colIndex = +(input.dataset.col || 0);
+
+      input.value = `${solution[rowIndex][colIndex]}`;
+
+      if (problem[rowIndex][colIndex] === 0) {
+        input.classList.add('sudoku__value--style-light');
+      }
+    }
+  })
+});
