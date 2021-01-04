@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { solve } from './x-algorithm';
 
-describe('Algorithm X', () => {
+describe('x-algorithm', () => {
   it('Решение задачи полного покрытия #1', () => {
     const problem = [
       [1, 0, 0, 1, 0, 0, 1],

@@ -1,7 +1,6 @@
-import { FourLinkedList as List, ListNode } from "./four-linked-list";
-import * as XAlgorithm from './x-algorithm';
+import { FourLinkedList, ListNode, solve } from "./x-algorithm";
 
-export interface SudokuCell {
+export interface Cell {
   numValue: number;
   rowIndex: number;
   colIndex: number;
@@ -26,11 +25,11 @@ export function zeros(size: number): number[][] {
   return out;
 }
 
-export function pushCell(arr: number[][], cell?: SudokuCell) {
+export function pushCell(arr: number[][], cell?: Cell) {
   if (cell) arr[cell.rowIndex][cell.colIndex] = cell.numValue;
 }
 
-export function solve(src: number[][]) {
+export function solveSudoku(src: number[][]) {
   const RANK = src?.length || 0;
   const ROWS_COUNT = RANK;
   const COLS_COUNT = RANK;
@@ -40,8 +39,8 @@ export function solve(src: number[][]) {
   const PAGE_2 = PAGE_1 * 2;
   const PAGE_3 = PAGE_1 * 3;
 
-  const list = new List<SudokuCell>(RANK * RANK * 4);
-  const outRows: ListNode<SudokuCell>[] = [];
+  const list = new FourLinkedList<Cell>(RANK * RANK * 4);
+  const outRows: ListNode<Cell>[] = [];
   const out = zeros(RANK);
 
   for (let rowIndex = 0; rowIndex < ROWS_COUNT; rowIndex++) {
@@ -72,7 +71,7 @@ export function solve(src: number[][]) {
   for (const row of outRows) {
     list.remove(row);
   }
-  outRows.push(...XAlgorithm.solve(list));
+  outRows.push(...solve(list));
 
   for (const row of outRows) {
     pushCell(out, row.data);

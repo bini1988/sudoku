@@ -1,8 +1,27 @@
 import { expect } from 'chai';
-import { numberQuads } from './utils';
-import { solve, quad } from './sudoku-solver';
+import { solveSudoku, quad } from './sudoku-solver';
 
 describe('Решение Судоку', () => {
+  function numberQuads(size: number): number[][] {
+    const out: number[][] = [];
+    const SIDE = Math.sqrt(size);
+
+    for (let rowQuad = 0; rowQuad < SIDE; rowQuad++) {
+      for (let colQuad = 0; colQuad < SIDE; colQuad++) {
+        for (let rowIndex = 0; rowIndex < SIDE; rowIndex++) {
+          for (let colIndex = 0; colIndex < SIDE; colIndex++) {
+            const row = rowQuad * SIDE + rowIndex;
+            const col = colQuad * SIDE + colIndex;
+
+            out[row] = out[row] || [];
+            out[row][col] = rowQuad * SIDE + colQuad;
+          }
+        }
+      }
+    }
+    return out;
+  }
+
   it('Возвращает # квадрата по индексу клетки для 4x4', () => {
     const SIZE = 4;
     const quads = numberQuads(SIZE);
@@ -36,7 +55,7 @@ describe('Решение Судоку', () => {
       [2, 1, 3, 4],
       [4, 3, 1, 2],
     ];
-    const solution = solve(problem);
+    const solution = solveSudoku(problem);
 
     for (let rowIndex = 0; rowIndex < problem.length; rowIndex++) {
       expect(solution[rowIndex]).to.have.all.members(sudoku[rowIndex]);
@@ -55,7 +74,7 @@ describe('Решение Судоку', () => {
       [2, 1, 3, 4],
       [4, 3, 1, 2],
     ];
-    const solution = solve(problem);
+    const solution = solveSudoku(problem);
 
     for (let rowIndex = 0; rowIndex < problem.length; rowIndex++) {
       expect(solution[rowIndex]).to.have.all.members(sudoku[rowIndex]);
@@ -84,7 +103,7 @@ describe('Решение Судоку', () => {
       [3, 6, 1, 9, 8, 2, 4, 5, 7],
       [5, 2, 9, 6, 4, 7, 3, 8, 1],
     ];
-    const solution = solve(problem);
+    const solution = solveSudoku(problem);
 
     for (let rowIndex = 0; rowIndex < problem.length; rowIndex++) {
       expect(solution[rowIndex]).to.have.all.members(sudoku[rowIndex]);
@@ -113,7 +132,7 @@ describe('Решение Судоку', () => {
       [2, 6, 4, 7, 9, 3, 5, 1, 8],
       [1, 7, 8, 2, 6, 5, 4, 3, 9],
     ];
-    const solution = solve(problem);
+    const solution = solveSudoku(problem);
 
     for (let rowIndex = 0; rowIndex < problem.length; rowIndex++) {
       expect(solution[rowIndex]).to.have.all.members(sudoku[rowIndex]);
@@ -142,7 +161,7 @@ describe('Решение Судоку', () => {
       [3, 1, 2, 5, 8, 6, 9, 4, 7],
       [7, 9, 5, 1, 3, 4, 8, 6, 2],
     ];
-    const solution = solve(problem);
+    const solution = solveSudoku(problem);
 
     for (let rowIndex = 0; rowIndex < problem.length; rowIndex++) {
       expect(solution[rowIndex]).to.have.all.members(sudoku[rowIndex]);

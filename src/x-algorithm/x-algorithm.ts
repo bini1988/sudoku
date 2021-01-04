@@ -1,13 +1,13 @@
-import { FourLinkedList as List, ListHead, ListNode } from "./four-linked-list";
+import { FourLinkedList, ListHead, ListNode } from './four-linked-list';
 
-function isEmpty<T>(list: List<T>) {
+function isEmpty<T>(list: FourLinkedList<T>) {
   return (
     (list.host?.pL === list.host) &&
     (list.host?.pR === list.host)
   );
 }
 
-function lowest<T>(list: List<T>): ListHead<T> | null {
+function lowest<T>(list: FourLinkedList<T>): ListHead<T> | null {
   let out: ListHead<T> = list.host.pR;
   let cur: ListHead<T> = out;
 
@@ -19,7 +19,7 @@ function lowest<T>(list: List<T>): ListHead<T> | null {
   return out;
 }
 
-function find<T>(list: List<T>, col: ListHead<T> | null, out: ListNode<T>[]): boolean {
+function find<T>(list: FourLinkedList<T>, col: ListHead<T> | null, out: ListNode<T>[]): boolean {
   if (col === null) return false;
   if (isEmpty(list)) return true;
 
@@ -36,9 +36,10 @@ function find<T>(list: List<T>, col: ListHead<T> | null, out: ListNode<T>[]): bo
   return false;
 }
 
-export function solve<T>(src: number[][] | List<T>): ListNode<T>[] {
+export function solve<T>(src: number[][] | FourLinkedList<T>): ListNode<T>[] {
   const rows: ListNode<T>[] = [];
-  const list: List<T> = (src instanceof List) ? src : List.from(src);
+  const list: FourLinkedList<T> =
+    (src instanceof FourLinkedList) ? src : FourLinkedList.from(src);
 
   if (find(list, lowest(list), rows)) {
     return rows;
