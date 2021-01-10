@@ -1,4 +1,4 @@
-import { FourLinkedList, ListNode, solve } from "./x-algorithm";
+import { FourLinkedList, ListNode, solve } from "../x-algorithm";
 
 export interface Cell {
   numValue: number;

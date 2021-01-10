@@ -7,11 +7,17 @@
     <title>Sudoku</title>
     <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
     <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+    <script src="opencv@light.js"></script>
+    <script src="ocrad@0.25.js"></script>
   <link href="style.css" rel="stylesheet"></head>
-  <body class="page">
+  <body class="page" data-view="sudoku">
     <div class="page__wrap">
       <div class="page__controls controls">
         <h1 class="controls__title">Sudoku Solver</h1>
+        <button id="camera" class="controls__btn btn btn--type-camera" type="button" title="Camera">Camera</button>
+        <label class="controls__btn btn btn--type-import" aria-label="Import" title="Import image">
+          <input id="file" class="btn__input" type="file" accept="image/*">
+        </label>
         <button id="clear" class="controls__btn btn btn--type-clear" type="button" title="Clear">Clear</button>
         <button id="solve" class="controls__btn btn btn--type-solve" type="button" title="Solve">Solve</button>
       </div>
@@ -279,6 +285,9 @@
             </td>
           </tr>
         </table>
+      </div>
+      <div id="capture" class="page__capture capture">
+        <canvas id="canvas" class="capture__canvas" width="960" height="720">
       </div>
     </div>
   <script src="bundle.js"></script></body>

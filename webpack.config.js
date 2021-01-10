@@ -17,6 +17,7 @@ module.exports = {
   devtool: IS_DEV ? 'source-map' : false,
   devServer: {
     contentBase: path.resolve(__dirname, 'docs'),
+    hot: false,
     open: true,
     port: 3000,
   },
@@ -38,7 +39,7 @@ module.exports = {
   plugins: [
     ...(IS_DEV ? [] : [new CssExtractPlugin({ filename: 'style.css' })]),
     new HtmlWebpackPlugin({
-      template: './src/index.html',
+      template: './src/templates/index.html',
       minify: false,
     }),
     new DefinePlugin({
