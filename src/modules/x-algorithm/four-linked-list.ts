@@ -4,10 +4,11 @@
  */
 export class FourLinkedList<T = unknown> {
   public readonly host: ListHead<T>;
+  public readonly head: ListHead<T>[];
 
   public constructor(size: number) {
     const host = new ListHead<T>();
-    const cursor = new Array<ListElement<T>>(size);
+    const head = new Array<ListHead<T>>(size);
 
     let curr = host;
 
@@ -18,13 +19,11 @@ export class FourLinkedList<T = unknown> {
       node.pR = host;
       curr.pR = node;
       curr = node;
-      cursor[index] = node;
+      head[index] = node;
     }
     this.host = host;
-    this.cursor = cursor;
+    this.head = head;
   }
-
-  private readonly cursor: ListElement<T>[];
 
   private removeLR(node: ListElement<T>) {
     node.pL.pR = node.pR;
@@ -111,7 +110,7 @@ export class FourLinkedList<T = unknown> {
   }
 
   public pushRow(rowIndex: number, data?: T) {
-    return new ListRow(rowIndex, this.cursor, data);
+    return new ListRow(rowIndex, this.head, data);
   }
 
   public static from<T>(src: number[][]): FourLinkedList<T> {
@@ -208,38 +207,37 @@ export class ListRow<T = unknown> {
 
   public constructor(
     private readonly index: number,
-    private readonly cursor: ListElement<T>[],
+    private readonly head: ListHead<T>[],
     private readonly data?: T,
   ) {}
 
   public pushCol(colIndex: number): ListRow<T> {
-    const cursor = this.cursor;
+    const head = this.head;
     const rowIndex = this.index;;
-    const colHead = cursor[colIndex]?.pB;
+    const colHead = head[colIndex];
 
-    if (!colHead || colHead instanceof ListNode) {
-      return this;
-    }
+    if (!colHead)  return this;
+
     const node = new ListNode<T>(colHead);
+    const ref = this.ref || node;
 
     node.pos.row = rowIndex;
     node.pos.col = colIndex;
     node.data = this.data;
 
-    node.pT = cursor[colIndex];
-    cursor[colIndex].pB = node;
+    node.pT = head[colIndex].pT;
+    head[colIndex].pT.pB = node;
 
     colHead.amount++;
     colHead.pT = node;
     node.pB = colHead;
 
-    this.ref = this.ref || node;
-    node.pL = this.ref.pL;
-    node.pR = this.ref;
-    this.ref.pL.pR = node;
-    this.ref.pL = node;
+    node.pL = ref.pL;
+    node.pR = ref;
+    ref.pL.pR = node;
+    ref.pL = node;
 
-    cursor[colIndex] = node;
+    this.ref = ref;
 
     return this;
   };
